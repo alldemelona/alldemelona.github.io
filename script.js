@@ -76,7 +76,7 @@ if (canvas && scoreValue && bestValue && statusValue && startBtn && pauseBtn && 
     return candidate;
   }
 
-  function resetGame(message = 'Press Start to play.') {
+  function resetGame(message = '시작 버튼을 눌러 주세요.') {
     snake = [
       { x: 9, y: 10 },
       { x: 8, y: 10 },
@@ -141,37 +141,37 @@ if (canvas && scoreValue && bestValue && statusValue && startBtn && pauseBtn && 
     if (message) {
       statusValue.textContent = message;
     }
-    pauseBtn.textContent = state === 'paused' ? 'Resume' : 'Pause';
-    startBtn.textContent = state === 'running' ? 'Playing' : 'Start';
+    pauseBtn.textContent = state === 'paused' ? '재개' : '일시정지';
+    startBtn.textContent = state === 'running' ? '진행 중' : '시작';
   }
 
   function startGame() {
     if (state === 'running') return;
     if (state === 'paused') {
-      setState('running', 'Game resumed.');
+      setState('running', '게임을 재개했습니다.');
       startLoop();
       return;
     }
-    resetGame('Game started. Good luck!');
-    setState('running', 'Game started. Good luck!');
+    resetGame('게임을 시작했습니다. 행운을 빕니다!');
+    setState('running', '게임을 시작했습니다. 행운을 빕니다!');
     startLoop();
   }
 
   function pauseGame() {
     if (state === 'running') {
       stopLoop();
-      setState('paused', 'Game paused.');
+      setState('paused', '게임을 일시정지했습니다.');
       return;
     }
     if (state === 'paused') {
-      setState('running', 'Game resumed.');
+      setState('running', '게임을 재개했습니다.');
       startLoop();
     }
   }
 
   function restartGame() {
-    resetGame('Game restarted.');
-    setState('running', 'Game restarted.');
+    resetGame('게임을 다시 시작했습니다.');
+    setState('running', '게임을 다시 시작했습니다.');
     startLoop();
   }
 
@@ -182,7 +182,7 @@ if (canvas && scoreValue && bestValue && statusValue && startBtn && pauseBtn && 
       bestScore = score;
       localStorage.setItem(storageKey, String(bestScore));
     }
-    updateHUD('Game over. Press Restart to try again.');
+    updateHUD('게임 오버입니다. 재시작 버튼을 눌러 다시 도전하세요.');
     draw(true);
   }
 
@@ -230,7 +230,7 @@ if (canvas && scoreValue && bestValue && statusValue && startBtn && pauseBtn && 
       food = randomCell([enemy]);
       scoreValue.textContent = String(score);
       bestValue.textContent = String(bestScore);
-      statusValue.textContent = 'Yum! Keep going.';
+      statusValue.textContent = '먹었습니다! 계속 진행해 보세요.';
     } else {
       snake.pop();
     }
@@ -345,11 +345,11 @@ if (canvas && scoreValue && bestValue && statusValue && startBtn && pauseBtn && 
     }
 
     if (state === 'paused') {
-      drawOverlay('Paused');
+      drawOverlay('일시정지');
     } else if (state === 'gameover' || gameOverState) {
-      drawOverlay('Game Over');
+      drawOverlay('게임 오버');
     } else if (state === 'idle') {
-      drawOverlay('Press Start');
+      drawOverlay('시작 버튼을 눌러 주세요');
     }
   }
 
