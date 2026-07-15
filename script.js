@@ -29,7 +29,9 @@ if (canvas && scoreValue && bestValue && statusValue && startBtn && pauseBtn && 
     snake: '#ff8fb1',
     snakeHead: '#ff6f9f',
     food: '#8ecae6',
+    enemy: '#b38bff',
     foodGlow: 'rgba(142, 202, 230, 0.35)',
+    enemyGlow: 'rgba(179, 139, 255, 0.28)',
     text: '#3f2f2a',
   };
 
@@ -37,10 +39,12 @@ if (canvas && scoreValue && bestValue && statusValue && startBtn && pauseBtn && 
   let currentDirection = { x: 1, y: 0 };
   let queuedDirection = null;
   let food = { x: 0, y: 0 };
+  let enemy = { x: 0, y: 0 };
   let score = 0;
   let bestScore = Number(localStorage.getItem(storageKey) || '0');
   let state = 'idle';
   let timerId = null;
+  let tickCount = 0;
   let lastRenderScale = 1;
 
   bestValue.textContent = String(bestScore);
@@ -58,14 +62,17 @@ if (canvas && scoreValue && bestValue && statusValue && startBtn && pauseBtn && 
     draw();
   }
 
-  function randomCell() {
+  function randomCell(exclusions = []) {
     let candidate;
     do {
       candidate = {
         x: Math.floor(Math.random() * cellCount),
         y: Math.floor(Math.random() * cellCount),
       };
-    } while (snake.some((part) => part.x === candidate.x && part.y === candidate.y));
+    } while (
+      snake.some((part) => part.x === candidate.x && part.y === candidate.y) ||
+      exclusions.some((part) => part.x === candidate.x && part.y === candidate.y)
+    );
     return candidate;
   }
 
@@ -78,7 +85,9 @@ if (canvas && scoreValue && bestValue && statusValue && startBtn && pauseBtn && 
     currentDirection = { x: 1, y: 0 };
     queuedDirection = null;
     score = 0;
-    food = randomCell();
+    tickCount = 0;
+    enemy = randomCell();
+    food = randomCell([enemy]);
     state = 'idle';
     stopLoop();
     updateHUD(message);
@@ -179,6 +188,7 @@ if (canvas && scoreValue && bestValue && statusValue && startBtn && pauseBtn && 
 
   function tick() {
     if (state !== 'running') return;
+    tickCount += 1;
     if (queuedDirection && !isOpposite(queuedDirection, currentDirection)) {
       currentDirection = queuedDirection;
     }
@@ -205,6 +215,11 @@ if (canvas && scoreValue && bestValue && statusValue && startBtn && pauseBtn && 
 
     snake.unshift(nextHead);
 
+    if (nextHead.x === enemy.x && nextHead.y === enemy.y) {
+      gameOver();
+      return;
+    }
+
     const ateFood = nextHead.x === food.x && nextHead.y === food.y;
     if (ateFood) {
       score += 10;
@@ -212,7 +227,7 @@ if (canvas && scoreValue && bestValue && statusValue && startBtn && pauseBtn && 
         bestScore = score;
         localStorage.setItem(storageKey, String(bestScore));
       }
-      food = randomCell();
+      food = randomCell([enemy]);
       scoreValue.textContent = String(score);
       bestValue.textContent = String(bestScore);
       statusValue.textContent = 'Yum! Keep going.';
@@ -220,7 +235,37 @@ if (canvas && scoreValue && bestValue && statusValue && startBtn && pauseBtn && 
       snake.pop();
     }
 
+    if (tickCount % 3 === 0) {
+      moveEnemy();
+    }
+
     draw();
+  }
+
+  function moveEnemy() {
+    const candidates = [
+      { x: enemy.x + 1, y: enemy.y },
+      { x: enemy.x - 1, y: enemy.y },
+      { x: enemy.x, y: enemy.y + 1 },
+      { x: enemy.x, y: enemy.y - 1 },
+    ].filter((candidate) =>
+      candidate.x >= 0 &&
+      candidate.x < cellCount &&
+      candidate.y >= 0 &&
+      candidate.y < cellCount &&
+      !snake.some((part) => part.x === candidate.x && part.y === candidate.y) &&
+      !(candidate.x === food.x && candidate.y === food.y)
+    );
+
+    if (!candidates.length) {
+      return;
+    }
+
+    enemy = candidates[Math.floor(Math.random() * candidates.length)];
+
+    if (snake.some((part) => part.x === enemy.x && part.y === enemy.y)) {
+      gameOver();
+    }
   }
 
   function roundRect(x, y, w, h, r, fillStyle) {
@@ -273,6 +318,12 @@ if (canvas && scoreValue && bestValue && statusValue && startBtn && pauseBtn && 
     ctx.shadowColor = colors.foodGlow;
     ctx.shadowBlur = 18;
     drawCell(food.x, food.y, colors.food, 0.18);
+    ctx.restore();
+
+    ctx.save();
+    ctx.shadowColor = colors.enemyGlow;
+    ctx.shadowBlur = 16;
+    drawCell(enemy.x, enemy.y, colors.enemy, 0.18);
     ctx.restore();
 
     snake.forEach((part, index) => {
