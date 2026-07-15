@@ -3,69 +3,162 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Cute personal professional website with a games section.">
+  <meta name="description" content="Cute personal portfolio with a snake game.">
   <title>alldemelona | Portfolio</title>
   <link rel="stylesheet" href="styles.css">
   <script defer src="script.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+
   <header class="site-header">
     <div class="brand">
-      <span class="brand-mark">★</span>
+      <span class="brand-mark" aria-hidden="true">*</span>
       <div>
         <p class="eyebrow">Personal Portfolio</p>
         <h1>alldemelona</h1>
       </div>
     </div>
+
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+
     <nav id="site-nav" class="site-nav" aria-label="Primary">
+      <a href="#home">Home</a>
       <a href="#about">About</a>
-      <a href="#work">Work</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#research">Research</a>
       <a href="#games">Games</a>
       <a href="#contact">Contact</a>
     </nav>
   </header>
 
   <main id="main">
-    <section class="hero card">
-      <p class="eyebrow">Cute theme, professional layout</p>
-      <h2>Building a calm, playful, responsive presence.</h2>
-      <p>
-        A small, polished portfolio shell ready for verified profile details and a future snake game.
-      </p>
-      <div class="hero-actions">
-        <a class="button" href="#games">Go to Games</a>
-        <a class="button button-secondary" href="#contact">Contact</a>
+    <section id="home" class="hero card">
+      <div class="hero-copy">
+        <p class="eyebrow">Cute theme, professional layout</p>
+        <h2>Building a calm, playful, responsive presence.</h2>
+        <p>
+          This root-level site is ready for verified profile details, project highlights, and a polished snake game.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="#games">Go to Games</a>
+          <a class="button button-secondary" href="#contact">Contact</a>
+        </div>
       </div>
+
+      <aside class="hero-panel">
+        <p class="panel-label">Current focus</p>
+        <ul class="chip-list" aria-label="Site goals">
+          <li>Responsive layout</li>
+          <li>Games menu</li>
+          <li>Snake gameplay</li>
+          <li>[사람 확인 필요]</li>
+        </ul>
+      </aside>
     </section>
 
     <section id="about" class="card">
-      <h2>About</h2>
+      <div class="section-heading">
+        <p class="eyebrow">About</p>
+        <h2>Who I Am</h2>
+      </div>
       <p>[사람 확인 필요]</p>
     </section>
 
-    <section id="work" class="card-grid">
-      <article class="card">
-        <h2>Profile</h2>
+    <section id="projects" class="card-grid">
+      <article class="card feature-card">
+        <div class="section-heading">
+          <p class="eyebrow">Projects</p>
+          <h2>Highlights</h2>
+        </div>
         <p>[사람 확인 필요]</p>
       </article>
-      <article class="card">
-        <h2>Highlights</h2>
+      <article class="card feature-card">
+        <div class="section-heading">
+          <p class="eyebrow">Projects</p>
+          <h2>Selected Work</h2>
+        </div>
         <p>[사람 확인 필요]</p>
       </article>
     </section>
 
-    <section id="games" class="card">
-      <h2>Games</h2>
-      <p>The snake game will live here in a later loop.</p>
-      <div class="game-shell" aria-label="Game placeholder">
-        <p>Game area ready.</p>
+    <section id="experience" class="card-grid">
+      <article class="card feature-card">
+        <div class="section-heading">
+          <p class="eyebrow">Experience</p>
+          <h2>Work History</h2>
+        </div>
+        <p>[사람 확인 필요]</p>
+      </article>
+      <article class="card feature-card">
+        <div class="section-heading">
+          <p class="eyebrow">Experience</p>
+          <h2>Impact</h2>
+        </div>
+        <p>[사람 확인 필요]</p>
+      </article>
+    </section>
+
+    <section id="research" class="card">
+      <div class="section-heading">
+        <p class="eyebrow">Research</p>
+        <h2>Learning and Notes</h2>
+      </div>
+      <p>[사람 확인 필요]</p>
+    </section>
+
+    <section id="games" class="card game-section">
+      <div class="section-heading">
+        <p class="eyebrow">Games</p>
+        <h2>Snake Game</h2>
+      </div>
+      <p class="game-copy">Use arrow keys, WASD, or the mobile buttons. Start, pause, restart, and keep chasing a better score.</p>
+
+      <div class="game-layout">
+        <div class="game-board-wrap">
+          <canvas id="snake-canvas" width="480" height="480" aria-label="Snake game board"></canvas>
+          <div id="game-overlay" class="game-overlay" aria-live="polite">
+            <p id="game-status">Press Start to play.</p>
+          </div>
+        </div>
+
+        <div class="game-panel">
+          <div class="scoreboard" aria-label="Game scores">
+            <div>
+              <span class="score-label">Score</span>
+              <strong id="score-value">0</strong>
+            </div>
+            <div>
+              <span class="score-label">Best</span>
+              <strong id="best-value">0</strong>
+            </div>
+          </div>
+
+          <div class="game-actions">
+            <button type="button" class="button" id="start-btn">Start</button>
+            <button type="button" class="button button-secondary" id="pause-btn">Pause</button>
+            <button type="button" class="button button-secondary" id="restart-btn">Restart</button>
+          </div>
+
+          <div class="direction-pad" aria-label="Mobile controls">
+            <button type="button" class="pad-btn up" data-direction="up" aria-label="Move up">^</button>
+            <button type="button" class="pad-btn left" data-direction="left" aria-label="Move left">&lt;</button>
+            <button type="button" class="pad-btn center" data-action="pause" aria-label="Pause or resume">II</button>
+            <button type="button" class="pad-btn right" data-direction="right" aria-label="Move right">&gt;</button>
+            <button type="button" class="pad-btn down" data-direction="down" aria-label="Move down">v</button>
+          </div>
+
+          <p class="game-note">No extra game features were added beyond the requested snake game.</p>
+        </div>
       </div>
     </section>
 
     <section id="contact" class="card">
-      <h2>Contact</h2>
+      <div class="section-heading">
+        <p class="eyebrow">Contact</p>
+        <h2>Get in Touch</h2>
+      </div>
       <p>[사람 확인 필요]</p>
     </section>
   </main>
